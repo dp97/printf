@@ -8,11 +8,14 @@ static int	print(const char *format, va_list args)
 	count = 0;
 	while(*format)
 	{
-		//some_type arg = va_arg(listPointer, some_type);
+		//some_type arg = va_arg(args, some_type);
 		if (*format == '%')
 		{
-			ft_putchar("-");
-			exit(1);
+			format++;
+			if (*format == 's')
+				ft_putstr(va_arg(args, char*));
+			else if (*format == 'd')
+                ft_putnbr(va_arg(args, int));
 		}
 		else
 		{
