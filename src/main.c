@@ -15,11 +15,13 @@
 
 int main()
 {
+    void    *p;
 
-	ft_printf("Hello <%s>world! <%d> <%d>", "PAM PAM", 12345, -6789);
-    ft_putchar("\n");
-    printf("Hello <%s>world! <%d> <%d>", "PAM PAM", 12345, -6789);
-	//printf("%d", 423);
+	ft_printf("Hello <%s>world! <%X> <%p>", "PAM PAM", 999, p, 4294967295);
+    ft_printf( "%u", 17u);
+    ft_putchar('\n');
+    printf("Hello <%s>world! <%X> <%p> |%D|", "PAM PAM", 999, p, 42949);
+    printf( "%u", 17u );
 	return 0;
 }
 

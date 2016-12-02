@@ -12,10 +12,24 @@ static int	print(const char *format, va_list args)
 		if (*format == '%')
 		{
 			format++;
-			if (*format == 's')
+            if (*format == '%')
+                ft_putchar('%');
+            /*         FLAGS         */
+            /*      CONVERSIONS      s di c xX u o p  9/14*/
+			else if (*format == 's')
 				ft_putstr(va_arg(args, char*));
-			else if (*format == 'd')
+			else if (*format == 'd' || *format == 'i')
                 ft_putnbr(va_arg(args, int));
+            else if (*format == 'c')
+                ft_putchar(va_arg(args, int));
+            else if (*format == 'x' || *format == 'X')
+                count += ft_unsigned_hex(va_arg(args, unsigned int), *format);
+            else if (*format == 'u')
+                count += ft_unsigned_int(va_arg(args, unsigned int));
+            else if (*format == 'o')
+                count += ft_unsigned_octal(va_arg(args, unsigned int));
+            else if (*format == 'p')
+                count += ft_print_address(va_arg(args, unsigned long));
 		}
 		else
 		{

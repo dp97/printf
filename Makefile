@@ -6,18 +6,18 @@
 #    By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/02 08:57:51 by dpetrov           #+#    #+#              #
-#    Updated: 2016/12/02 09:40:40 by dpetrov          ###   ########.fr        #
+#    Updated: 2016/12/02 14:50:45 by dpetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= print
 
-CC		=  gcc -Wall -Wextra -Werror -I./includes/
+CC		=  gcc -I./includes/
 
 OBJ_PATH = ./obj/
 SRC_PATH = ./src/
 
-SRCS	= main.c ft_printf.c
+SRCS	= main.c ft_printf.c functions.c convert.c
 SRC     = $(addprefix $(SRC_PATH),$(SRCS))
 
 OBJS    = $(SRCS:.c=.o)
@@ -32,6 +32,9 @@ $(OBJ_PATH)%.o : $(SRC_PATH)%.c
 	    @mkdir -p $(OBJ_PATH)
 		@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
 clean:
-	rm -rf $(NAME)
+	rm -rf $(OBJ)
 
-re: clean all
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
