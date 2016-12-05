@@ -27,12 +27,10 @@ static int	print(const char *format, va_list args)
                 ft_putchar(va_arg(args, int));
             else if (*format == 'C') // same as : %lc
                 count += ft_wide_char(va_arg(args, wint_t));
-            else if (*format == 'x' || *format == 'X')
+            else if (*format == 'x' || *format == 'X' || *format == 'o')
                 count += ft_unsigned_hex(va_arg(args, unsigned int), *format);
             else if (*format == 'u')
                 count += ft_unsigned_int(va_arg(args, unsigned int));
-            else if (*format == 'o')
-                count += ft_unsigned_octal(va_arg(args, unsigned int));
             else if (*format == 'p')
                 count += ft_print_address(va_arg(args, unsigned long));
 		}

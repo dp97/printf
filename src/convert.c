@@ -14,7 +14,7 @@
 #include "ft_printf.h"
 #define SI(a) ((a < 0) ? -(a) : (a))
 
-char    ft_to_hex(char *buf, unsigned int u, int len, int flag)
+char    *ft_to_hex(char *buf, unsigned int u, int len, int flag, int base)
 {
     int     pos;
     char    *table;
@@ -26,12 +26,11 @@ char    ft_to_hex(char *buf, unsigned int u, int len, int flag)
         table = b_up;
     else
         table = b_low;
-    buf[pos--] = '\0';
+    buf[--pos] = '\0';
     while (u != 0)
     {
-        buf[--pos] = table[u % 16];
-        u /= 16;
+        buf[pos--] = table[u % base];
+        u /= base;
     }
     return (buf);
-}eturn (ans);
 }

@@ -17,9 +17,9 @@ int main()
 {
     void    *p;
 
-	ft_printf("->%d", ft_printf("<%C>%", L'A'));
+	ft_printf("->%d", ft_printf("<%x><%X><%o>", 999, 999, 999));
     ft_putchar('\n');
-    printf("->%d", printf("<%c>%", L'A'));
+    printf("->%d", printf("<%x><%X><%o>", 999, 999, 999));
 	return 0;
 }
 
