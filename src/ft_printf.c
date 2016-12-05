@@ -8,20 +8,25 @@ static int	print(const char *format, va_list args)
 	count = 0;
 	while(*format)
 	{
-		//some_type arg = va_arg(args, some_type);
 		if (*format == '%')
 		{
 			format++;
             if (*format == '%')
                 ft_putchar('%');
+            else if (*format == '\0') // END OF STRING
+                break ;
             /*         FLAGS         */
-            /*      CONVERSIONS      s di c xX u o p  9/14*/
+            /*      CONVERSIONS      sS di cC xX u o p  11/14  D O U*/
 			else if (*format == 's')
 				ft_putstr(va_arg(args, char*));
+            else if (*format == 'S') // same as : %ls
+                count += ft_wide_string(va_arg(args, wchar_t*));
 			else if (*format == 'd' || *format == 'i')
                 ft_putnbr(va_arg(args, int));
             else if (*format == 'c')
                 ft_putchar(va_arg(args, int));
+            else if (*format == 'C') // same as : %lc
+                count += ft_wide_char(va_arg(args, wint_t));
             else if (*format == 'x' || *format == 'X')
                 count += ft_unsigned_hex(va_arg(args, unsigned int), *format);
             else if (*format == 'u')

@@ -26,35 +26,41 @@ static int  sqr(int b)
     return (a);
 }
 
+/*  PRINT :  wide char string      */
+int     ft_wide_string(wchar_t *s)
+{
+    int             i;
+    unsigned char   *ch;
+    wchar_t         c;
+    
+    i = 0;
+    while (s[i])
+    {
+        ch = (unsigned char*) & s[i];
+        ft_putchar(ch[0]);
+        i++;
+    }
+    return (i);
+}
+
+/*  PRINT :  wide char           */
+int     ft_wide_char(wint_t ch)
+{
+    unsigned char   *c;
+    
+    c = (unsigned char*) & ch;
+    ft_putchar(c[0]);
+    return (1);
+}
+
 /*  CONVERT : DECIMAL -> HEX      */
 int     ft_unsigned_hex(unsigned int value, char c)
 {
-    char    *num;
-    
-    num = ft_itoa_int(value, 16);
-    if (c == 'x')
-    {
-        while (*num)
-        {
-            if (*num >= 'A' && *num <= 'Z')
-                (*num) += 32;
-            ft_putchar(*num);
-            num++;
-        }
-    }
-    else
-        ft_putstr(num);
-    return (ft_strlen(num));
 }
 
 /*  CONVERT : DECIMAL -> HEX      */
 int     ft_unsigned_octal(unsigned int value)
 {
-    char    *num;
-    
-    num = ft_itoa_int(value, 8);
-    ft_putstr(num);
-    return (strlen(num));
 }
 
 /*  PRINT   : UNSIGNED INT       */

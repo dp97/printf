@@ -17,11 +17,9 @@ int main()
 {
     void    *p;
 
-	ft_printf("Hello <%s>world! <%X> <%p>", "PAM PAM", 999, p, 4294967295);
-    ft_printf( "%u", 17u);
+	ft_printf("->%d", ft_printf("<%C>%", L'A'));
     ft_putchar('\n');
-    printf("Hello <%s>world! <%X> <%p> |%D|", "PAM PAM", 999, p, 42949);
-    printf( "%u", 17u );
+    printf("->%d", printf("<%c>%", L'A'));
 	return 0;
 }
 
