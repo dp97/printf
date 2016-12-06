@@ -14,13 +14,15 @@
 #include "ft_printf.h"
 #define SI(a) ((a < 0) ? -(a) : (a))
 
-char    *ft_to_hex(char *buf, unsigned int u, int len, int flag, int base)
+int     ft_to_hex(char *buf, unsigned int u, int len, int flag, int base)
 {
     int     pos;
     char    *table;
     char	b_up[] = "0123456789ABCDEF";
     char	b_low[] = "0123456789abcdef";
+    int     count;
     
+    count = 0;
     pos = len;
     if (flag == 1)
         table = b_up;
@@ -31,6 +33,7 @@ char    *ft_to_hex(char *buf, unsigned int u, int len, int flag, int base)
     {
         buf[pos--] = table[u % base];
         u /= base;
+        count++;
     }
-    return (buf);
+    return (count);
 }
