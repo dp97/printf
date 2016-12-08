@@ -31,7 +31,6 @@ int     ft_wide_string(wchar_t *s)
 {
     int             i;
     unsigned char   *ch;
-    wchar_t         c;
     
     i = 0;
     while (s[i])
@@ -56,23 +55,46 @@ int     ft_wide_char(wint_t ch)
 /*  CONVERT : DECIMAL -> HEX      */
 int     ft_unsigned_hex(unsigned int value, char c)
 {
-    char    *buf;
+    char	*buf;
     int     len;
     
-    if ((buf = (char *)malloc(sizeof(char) * 11)) == NULL)
+    len = 0;
+    if ((buf = (char *)malloc(sizeof(char) * 35)) == NULL)
         return (0);
     if (c == 'X')
-        len = ft_to_hex(buf, value, 10, 1, 16);
+        buf = ft_itoa_base(buf, value, 16, 1);
+    else if (c == 'x')
+        buf = ft_itoa_base(buf, value, 16, 0);
     else if (c == 'o')
-        len = ft_to_hex(buf, value, 10, 0, 8);
+        buf = ft_itoa_base(buf, value, 8, 0);
     else if (c == 'p')
     {
         ft_putstr("0x");
-        len = ft_to_hex(buf, value, 10, 0, 16);
+        len += 2;
+        buf = ft_itoa_base(buf, value, 16, 0);
     }
-    else
-        len = ft_to_hex(buf, value, 10, 0, 16);
     ft_putstr(buf);
+    len = ft_strlen(buf);
+    free(buf);
+    return (len);
+}
+
+int     ft_DOU(long value, char c)
+{
+    char	*buf;
+    int     len;
+    
+    len = 0;
+    if ((buf = (char *)malloc(sizeof(char) * 35)) == NULL)
+        return (0);
+    if (c == 'D')
+        buf = ft_itoa_long(buf, value, 10, 0);
+    else if (c == 'O')
+        buf = ft_itoa_long(buf, value, 8, 0);
+    else if (c == 'U')
+        buf = ft_itoa_long(buf, value, 10, 0);
+    ft_putstr(buf);
+    len = ft_strlen(buf);
     free(buf);
     return (len);
 }

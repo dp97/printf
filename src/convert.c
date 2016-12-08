@@ -14,26 +14,48 @@
 #include "ft_printf.h"
 #define SI(a) ((a < 0) ? -(a) : (a))
 
-int     ft_to_hex(char *buf, unsigned int u, int len, int flag, int base)
+void	convert(int v, char *ans, int b, int *p)
 {
-    int     pos;
-    char    *table;
-    char	b_up[] = "0123456789ABCDEF";
-    char	b_low[] = "0123456789abcdef";
-    int     count;
+    char	base[] = "0123456789ABCDEF";
     
-    count = 0;
-    pos = len;
-    if (flag == 1)
-        table = b_up;
-    else
-        table = b_low;
-    buf[--pos] = '\0';
-    while (u != 0)
-    {
-        buf[pos--] = table[u % base];
-        u /= base;
-        count++;
-    }
-    return (count);
+    if (v <= -b || b <= v)
+        convert(v / b, ans, b, p);
+    ans[(*p)++] = base[SI(v % b)];
+}
+
+char	*ft_itoa_base(char *buf, int value, int base, int up_low)
+{
+    int		p;
+    
+    if (base < 2 || 16 < base)
+        return (NULL);
+    p = 0;
+    if (value < 0 && base == 10)
+        buf[p++] = '-';
+    convert(value, buf, base, &p);
+    buf[p] = '\0';
+    return ((up_low) ? buf : ft_str_case(buf, 0));
+}
+
+void	convert_long(long v, char *ans, int b, int *p)
+{
+    char	base[] = "0123456789ABCDEF";
+    
+    if (v <= -b || b <= v)
+        convert_long(v / b, ans, b, p);
+    ans[(*p)++] = base[SI(v % b)];
+}
+
+char    *ft_itoa_long(char *buf, long value, int base, int up_low)
+{
+    int		p;
+    
+    if (base < 2 || 16 < base)
+        return (NULL);
+    p = 0;
+    if (value < 0 && base == 10)
+        buf[p++] = '-';
+    convert_long(value, buf, base, &p);
+    buf[p] = '\0';
+    return ((up_low) ? buf : ft_str_case(buf, 0));
 }
