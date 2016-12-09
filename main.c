@@ -1,4 +1,5 @@
-#ifdef TEST_PRINTF
+#include <stdio.h>
+
 int main(void)
 {
 	char *ptr = "Hello world!";
@@ -62,5 +63,3 @@ int main(void)
  * -3: -3   left justif.
  * -3:   -3 right justif.
  */
-
-#endif

@@ -12,20 +12,6 @@
 
 #include "ft_printf.h"
 
-/*  RETURN SQUARE ROOT   */
-static int  sqr(int b)
-{
-    int     a;
-    
-    a = 1;
-    while (b)
-    {
-        a *= 10;
-        b--;
-    }
-    return (a);
-}
-
 /*  PRINT :  wide char string      */
 int     ft_wide_string(wchar_t *s)
 {
@@ -53,13 +39,30 @@ int     ft_wide_char(wint_t ch)
 }
 
 /*  CONVERT : DECIMAL -> HEX      */
-int     ft_unsigned_hex(unsigned int value, char c)
+int  ft_prints(char *s, int wh, int pad)
+{
+    int     count;
+    
+    count = ft_strlen(s);
+    if (pad)
+        ft_putstr(s);
+    while (wh > count)
+    {
+        ft_putchar(' ');
+        count++;
+    }
+    if (!pad)
+        ft_putstr(s);
+    return (count);
+}
+
+int     ft_unsigned(unsigned long long value, char c, int width, int flag)
 {
     char	*buf;
     int     len;
     
     len = 0;
-    if ((buf = (char *)malloc(sizeof(char) * 35)) == NULL)
+    if ((buf = (char *)malloc(sizeof(char) * 32)) == NULL)
         return (0);
     if (c == 'X')
         buf = ft_itoa_base(buf, value, 16, 1);
@@ -67,14 +70,22 @@ int     ft_unsigned_hex(unsigned int value, char c)
         buf = ft_itoa_base(buf, value, 16, 0);
     else if (c == 'o')
         buf = ft_itoa_base(buf, value, 8, 0);
+    else if (c == 'u')
+        buf = ft_itoa_base(buf, value, 10, 0);
     else if (c == 'p')
     {
         ft_putstr("0x");
         len += 2;
         buf = ft_itoa_base(buf, value, 16, 0);
     }
-    ft_putstr(buf);
-    len = ft_strlen(buf);
+    else if (c == 'i' || c == 'd')
+        buf = ft_itoa_base(buf, value, 10, 0);
+    if (flag & PLUS_SIGN)
+    {
+        ft_putchar('+');
+        len++;
+    }
+    len += ft_prints(buf, width, flag);
     free(buf);
     return (len);
 }
@@ -97,30 +108,4 @@ int     ft_DOU(long value, char c)
     len = ft_strlen(buf);
     free(buf);
     return (len);
-}
-
-/*  PRINT   : UNSIGNED INT       */
-int     ft_unsigned_int(unsigned int value)
-{
-    int             count;
-    unsigned int    temp;
-    int             ret;
-    
-    count = 1;
-    ret = 0;
-    temp = value;
-    while (temp > 9)
-    {
-        temp /= 10;
-        count += 1;
-    }
-    temp = value;
-    while (count)
-    {
-        count--;
-        ft_putchar(temp / sqr(count) + '0');
-        temp = value % sqr(count);
-        ret++;
-    }
-    return (ret);
 }
