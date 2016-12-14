@@ -6,7 +6,7 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/02 14:45:26 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/02 14:45:30 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/14 16:39:35 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int     ft_wide_string(wchar_t *s)
     while (s[i])
     {
         ch = (unsigned char*) & s[i];
-        ft_putchar(ch[0]);
+        ft_putc(ch[0]);
         i++;
     }
     return (i);
@@ -34,7 +34,7 @@ int     ft_wide_char(wint_t ch)
     unsigned char   *c;
     
     c = (unsigned char*) & ch;
-    ft_putchar(c[0]);
+    ft_putc(c[0]);
     return (1);
 }
 
@@ -43,16 +43,16 @@ int  ft_prints(char *s, int wh, int pad)
 {
     int     count;
     
-    count = ft_strlen(s);
+    count = ft_len(s);
     if (pad)
-        ft_putstr(s);
+        ft_puts(s);
     while (wh > count)
     {
-        ft_putchar(' ');
+        ft_putc(' ');
         count++;
     }
     if (!pad)
-        ft_putstr(s);
+        ft_puts(s);
     return (count);
 }
 
@@ -68,7 +68,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
     {
         if (flag & ALT_FORM)
         {
-            ft_putstr("0X");
+            ft_puts("0X");
             len += 2;
         }
         buf = ft_itoa_base(buf, value, 16, 1);
@@ -77,7 +77,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
     {
         if (flag & ALT_FORM)
         {
-            ft_putstr("0x");
+            ft_puts("0x");
             len += 2;
         }
         buf = ft_itoa_base(buf, value, 16, 0);
@@ -86,7 +86,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
     {
         if (flag & ALT_FORM)
         {
-            ft_putstr("0");
+            ft_puts("0");
             len += 1;
         }
         buf = ft_itoa_base(buf, value, 8, 0);
@@ -95,7 +95,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
         buf = ft_itoa_base(buf, value, 10, 0);
     else if (c == 'p')
     {
-        ft_putstr("0x");
+        ft_puts("0x");
         len += 2;
         buf = ft_itoa_base(buf, value, 16, 0);
     }
@@ -103,7 +103,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
     {
         if ((flag & SHOW_SIGN) && (long long)value < 0)
         {
-            ft_putstr("-");
+            ft_puts("-");
             value = -value;
             len++;
         }
@@ -111,7 +111,7 @@ int     ft_unsigned(unsigned long long value, char c, int width, int flag)
     }
     if (flag & PLUS_SIGN)
     {
-        ft_putchar('+');
+        ft_putc('+');
         len++;
     }
     len += ft_prints(buf, width, flag);
@@ -133,8 +133,8 @@ int     ft_DOU(long value, char c)
         buf = ft_itoa_base(buf, value, 8, 0);
     else if (c == 'U')
         buf = ft_itoa_base(buf, value, 10, 0);
-    ft_putstr(buf);
-    len = ft_strlen(buf);
+    ft_puts(buf);
+    len = ft_len(buf);
     free(buf);
     return (len);
 }

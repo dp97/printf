@@ -6,7 +6,7 @@
 #    By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/02 08:57:51 by dpetrov           #+#    #+#              #
-#    Updated: 2016/12/09 14:11:14 by dpetrov          ###   ########.fr        #
+#    Updated: 2016/12/14 16:42:47 by dpetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ IN		= -I./includes/
 OBJ_PATH = ./obj/
 SRC_PATH = ./src/
 
-SRCS	= ft_printf.c functions.c convert.c main.c
+SRCS	= ft_printf.c functions.c convert.c main.c util.c
 SRC     = $(addprefix $(SRC_PATH),$(SRCS))
 
 OBJS    = $(SRCS:.c=.o)
@@ -31,7 +31,7 @@ LFLAGS  = -L./libft -lft
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(INCDIR) -o $(NAME) $(OBJ) $(LFLAGS)
+	@$(CC) $(CFLAGS) $(INCDIR) -o $(NAME) $(OBJ)
 	@echo "\033[32mFT_PRINTF:\t\t:BUILDED\033[0m"
 
 $(OBJ_PATH)%.o : $(SRC_PATH)%.c

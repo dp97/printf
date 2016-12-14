@@ -6,7 +6,7 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 14:09:09 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/09 14:11:04 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/14 16:46:33 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 int		main()
 {
-    /*
     char *np = 0;
     char buf[80] = "12345";
     int     nb = 12345;
@@ -32,7 +31,7 @@ int		main()
     ft_printf("just==: \"%-3s\"\n", "left");
     printf("justif: \"%-3s\"\n", "left");
     ft_printf("just==: \"%6s\"\n", "right");
-    printf("justif: \"%6s\"\n", "right");*/
+    printf("justif: \"%6s\"\n", "right");
     
     ft_printf("<%d>\n", -223244352);
     printf("<%d>\n", -223244352);

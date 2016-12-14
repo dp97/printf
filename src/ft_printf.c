@@ -6,7 +6,7 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/10 18:21:35 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/10 18:24:36 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/14 16:19:01 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	print(const char *format, va_list args)
 		{
 			format++;
             if (*format == '%')
-                ft_putchar('%');
+                ft_puts("%");
             else if (*format == '\0')
                 break ;
             /*         FLAGS    # 0 + -  4/4   */
@@ -104,7 +104,7 @@ static int	print(const char *format, va_list args)
                 ch = (flag & L_FLAG) ? (wint_t)va_arg(args, int) :
                 (va_arg(args, int));
                 
-                ft_putchar(ch);
+                ft_putc(ch);
             }
 			else if (*format == 'd' || *format == 'i' || *format == 'D')
             {
@@ -167,7 +167,7 @@ static int	print(const char *format, va_list args)
 		}
 		else
 		{
-			ft_putchar(*format);
+			ft_putc(*format);
 			++count;
 		}
 		format++;	
