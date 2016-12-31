@@ -6,30 +6,30 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/02 14:23:30 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/02 14:23:33 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/30 11:17:56 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #define SI(a) ((a < 0) ? -(a) : (a))
 
-void	convert(unsigned long long v, char *ans, unsigned int b, int *p)
+static void	convert(unsigned long long v, char *ans, unsigned int b, int *p)
 {
-    char	base[] = "0123456789ABCDEF";
-    
-    if (b <= v)
-        convert(v / b, ans, b, p);
-    ans[(*p)++] = base[SI(v % b)];
+	char	num[16];
+
+	dp_strcpy(num, "0123456789ABCDEF");
+	if (b <= v)
+		convert(v / b, ans, b, p);
+	ans[(*p)++] = num[SI(v % b)];
 }
 
-char	*ft_itoa_base(char *buf, unsigned long long value, unsigned int base, int up_low)
+void		ft_itoa_base(char *buf, unsigned long long value, \
+		unsigned int base, int up_low)
 {
-    int		p;
-    
-    p = 0;
-    //if (value < 0 && base == 10)
-    //    buf[p++] = '-';
-    convert(value, buf, base, &p);
-    buf[p] = '\0';
-    return ((up_low) ? buf : ft_str_case(buf, 0));
+	int		p;
+
+	p = 0;
+	convert(value, buf, base, &p);
+	buf[p] = '\0';
+	(up_low) ? buf : ft_str_case(buf, 0);
 }

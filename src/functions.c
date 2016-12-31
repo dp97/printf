@@ -6,135 +6,83 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/02 14:45:26 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/14 16:39:35 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/31 12:56:38 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-/*  PRINT :  wide char string      */
-int     ft_wide_string(wchar_t *s)
+size_t				dp_wcslen(const wchar_t *s)
 {
-    int             i;
-    unsigned char   *ch;
-    
-    i = 0;
-    while (s[i])
-    {
-        ch = (unsigned char*) & s[i];
-        ft_putc(ch[0]);
-        i++;
-    }
-    return (i);
+	const wchar_t	*p;
+
+	p = s;
+	while (*p)
+		p++;
+	return (p - s);
 }
 
-/*  PRINT :  wide char           */
-int     ft_wide_char(wint_t ch)
+char				*ft_wide_string(wchar_t *s)
 {
-    unsigned char   *c;
-    
-    c = (unsigned char*) & ch;
-    ft_putc(c[0]);
-    return (1);
+	int				i;
+	unsigned char	*ch;
+	char			*res;
+	size_t			len;
+
+	len = dp_wcslen(s);
+	if ((res = (char *)malloc(sizeof(char) * (len + 1))) == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		ch = (unsigned char*)&s[i];
+		res[i] = ch[0];
+		i++;
+	}
+	return (res);
 }
 
-/*  CONVERT : DECIMAL -> HEX      */
-int  ft_prints(char *s, int wh, int pad)
+char				*number_to_char(unsigned long long value, \
+		char c, int *width, int *flag)
 {
-    int     count;
-    
-    count = ft_len(s);
-    if (pad)
-        ft_puts(s);
-    while (wh > count)
-    {
-        ft_putc(' ');
-        count++;
-    }
-    if (!pad)
-        ft_puts(s);
-    return (count);
-}
+	char			*buf;
+	char			alt_form[2];
+	int				i;
 
-int     ft_unsigned(unsigned long long value, char c, int width, int flag)
-{
-    char	*buf;
-    int     len;
-    
-    len = 0;
-    if ((buf = (char *)malloc(sizeof(char) * 32)) == NULL)
-        return (0);
-    if (c == 'X')
-    {
-        if (flag & ALT_FORM)
-        {
-            ft_puts("0X");
-            len += 2;
-        }
-        buf = ft_itoa_base(buf, value, 16, 1);
-    }
-    else if (c == 'x')
-    {
-        if (flag & ALT_FORM)
-        {
-            ft_puts("0x");
-            len += 2;
-        }
-        buf = ft_itoa_base(buf, value, 16, 0);
-    }
-    else if (c == 'o')
-    {
-        if (flag & ALT_FORM)
-        {
-            ft_puts("0");
-            len += 1;
-        }
-        buf = ft_itoa_base(buf, value, 8, 0);
-    }
-    else if (c == 'u')
-        buf = ft_itoa_base(buf, value, 10, 0);
-    else if (c == 'p')
-    {
-        ft_puts("0x");
-        len += 2;
-        buf = ft_itoa_base(buf, value, 16, 0);
-    }
-    else if (c == 'i' || c == 'd')
-    {
-        if ((flag & SHOW_SIGN) && (long long)value < 0)
-        {
-            ft_puts("-");
-            value = -value;
-            len++;
-        }
-        buf = ft_itoa_base(buf, value, 10, 0);
-    }
-    if (flag & PLUS_SIGN)
-    {
-        ft_putc('+');
-        len++;
-    }
-    len += ft_prints(buf, width, flag);
-    free(buf);
-    return (len);
-}
-
-int     ft_DOU(long value, char c)
-{
-    char	*buf;
-    int     len;
-    
-    len = 0;
-    if ((buf = (char *)malloc(sizeof(char) * 35)) == NULL)
-        return (0);
-    if (c == 'D')
-        buf = ft_itoa_base(buf, value, 10, 0);
-    else if (c == 'O')
-        buf = ft_itoa_base(buf, value, 8, 0);
-    else if (c == 'U')
-        buf = ft_itoa_base(buf, value, 10, 0);
-    ft_puts(buf);
-    len = ft_len(buf);
-    free(buf);
-    return (len);
+	i = 0;
+	alt_form[0] = 0;
+	if ((buf = (char *)malloc(sizeof(char) * 40)) == NULL)
+		return (0);
+	if (c == 'x' || c == 'X')
+	{
+		if (convert_x(buf, flag, value, (c == 'X') ? 1 : 0) == 0)
+		{
+			free(buf);
+			buf = NULL;
+			return (0);
+		}
+	}
+	else if (c == 'o')
+	{
+		if (*flag & ALT_FORM)
+			if (value == 0)
+			{
+				*flag |= STRING_FLAG;
+				dp_strcpy(buf, "0");
+				return (buf);
+			}
+		convert_o(buf, flag, value);
+	}
+	else if (c == 'u')
+		convert_u(buf, flag, value);
+	else if (c == 'b')
+		ft_itoa_base(buf, value, 2, 0);
+	else if (c == 'i')
+		convert_i(buf, flag, value);
+	if (*flag & MAX_PRINT && (width[1] == 0) && value == 0)
+	{
+		free(buf);
+		buf = 0;
+	}
+	return (buf);
 }

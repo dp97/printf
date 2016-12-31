@@ -6,182 +6,100 @@
 /*   By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/10 18:21:35 by dpetrov           #+#    #+#             */
-/*   Updated: 2016/12/14 16:19:01 by dpetrov          ###   ########.fr       */
+/*   Updated: 2016/12/31 12:51:30 by dpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int  ft_flags_2(char c, int *flags)
+static int	ft_specifiers(const char *format, va_list args, \
+		int width[2], int flag)
 {
-    if (c == 'h')
-    {
-        if (*flags & H_FLAG)
-            *flags |= HH_FLAG;
-        *flags |= H_FLAG;
-    }
-    else if (c == 'l')
-    {
-        if (*flags & L_FLAG)
-            *flags |= LL_FLAG;
-        *flags |= L_FLAG;
-    }
-    else if (c == 'j')
-        *flags |= INTMAX_T;
-    else if (c == 'z')
-        *flags |= SIZE_T;
-    else
-        return (0);
-    return (1);
+	int		char_written;
+
+	char_written = 0;
+	if (*format == 's' || *format == 'S')
+		char_written += handle_s(format, args, &flag, width);
+	else if (*format == 'c' || *format == 'C')
+		char_written += handle_c(format, args, &flag, width);
+	else if (*format == 'd' || *format == 'i' || *format == 'D')
+		char_written += handle_d_i(format, args, &flag, width);
+	else if (*format == 'u' || *format == 'U')
+		char_written += handle_u(format, args, &flag, width);
+	else if (*format == 'o' || *format == 'O')
+		char_written += handle_o(format, args, &flag, width);
+	else if (*format == 'x' || *format == 'X' || *format == 'p')
+		char_written += handle_x_p(format, args, &flag, width);
+	else if (*format == 'b')
+		char_written += handle_b(format, args, &flag, width);
+	else if (*format == 'f' || *format == 'F')
+		char_written += handle_f(format, args, &flag, width);
+	else if (*format == 'n')
+		handle_n(args, &flag, char_written);
+	return (char_written);
 }
 
-static const char  *ft_flags_1(const char *format,int *flag, int *width)
+static int	format_goes_up(const char *format, int *var_3, \
+		va_list args, int width[2])
 {
-    if (*format == '#')
-    {
-        *flag |= ALT_FORM;
-        format++;
-    }
-    if (*format == '-')
-    {
-        format++;
-        *flag |= PAD_RIGHT;
-    }
-    while (*format >= '0' && *format <= '9')
-    {
-        *width *= 10;
-        *width += (*format) - '0';
-        format++;
-    }
-    if (*format == '+')
-    {
-        *flag |= PLUS_SIGN;
-        format++;
-    }
-    return (format);
+	int		i;
+	char	*s;
+
+	i = 1;
+	if (format[i] == '\0')
+		return (0);
+	while (ft_flags_1(&format[i], &var_3[2], width, args) && format[i])
+		i++;
+	while (ft_modifiers(&format[i], &var_3[2]) && format[i])
+		i++;
+	if (format[i] == '\0')
+		return (0);
+	else if (format[i] == '%')
+	{
+		s = dp_strndup("%", 2);
+		var_3[1] += ft_prints(&s, var_3[2], width);
+	}
+	else if (var_3[1] += ft_specifiers(&format[i], args, width, var_3[2]))
+		;
+	return (i);
 }
 
 static int	print(const char *format, va_list args)
 {
-    unsigned long long     nb;
-    char *s;
-    char ch;
-	int		count;
-    int     width;
-    int     flag;
+	int		width[2];
+	int		ef_cw_nf[3];
 
-    width = 0;
-	count = 0;
-    nb = 0;
-	while(*format)
+	ef_cw_nf[1] = 0;
+	ef_cw_nf[0] = 0;
+	while (*format)
 	{
-        flag = 0;
+		ef_cw_nf[2] = 0;
+		width[0] = 0;
+		width[1] = 0;
+		if (*format == '{')
+			format += dp_check_color(format, &(ef_cw_nf[0]));
 		if (*format == '%')
 		{
-			format++;
-            if (*format == '%')
-                ft_puts("%");
-            else if (*format == '\0')
-                break ;
-            /*         FLAGS    # 0 + -  4/4   */
-            format = ft_flags_1(format, &flag, &width);
-            /*      FLAGS :     hh, h, l, ll, j, z */
-            if (ft_flags_2(*format, &flag))
-                format++;
-            /*      CONVERSIONS      sS di cC xX u o p  14/14  D O U*/
-            if (*format == 's' || *format == 'S')
-            {
-                if (*format == 'S')
-                    flag |= L_FLAG;
-                s = va_arg(args, char *);
-                
-                count += ft_prints((s ? s : "(null)"), width, flag);
-            }
-            else if (*format == 'c' || *format == 'C')
-            {
-                if (*format == 'C')
-                    flag |= L_FLAG;
-                ch = (flag & L_FLAG) ? (wint_t)va_arg(args, int) :
-                (va_arg(args, int));
-                
-                ft_putc(ch);
-            }
-			else if (*format == 'd' || *format == 'i' || *format == 'D')
-            {
-                if (*format == 'D')
-                    flag |= L_FLAG;
-                nb = (flag & H_FLAG) ? (short)va_arg(args, int) :
-                (flag & HH_FLAG) ? (signed char)va_arg(args, int) :
-                (flag & L_FLAG) ? va_arg(args, long) :
-                (flag & LL_FLAG) ? va_arg(args, long long) :
-                (flag & INTMAX_T) ? va_arg(args, intmax_t) :
-                (flag & SIZE_T) ? va_arg(args, ssize_t) :
-                va_arg(args, int);
-                
-                flag |= SHOW_SIGN;
-                count += ft_unsigned(nb, *format, width, flag);
-            }
-            else if (*format == 'u' || *format == 'U')
-            {
-                if (*format == 'U')
-                    flag |= L_FLAG;
-                nb = (flag & H_FLAG) ? (unsigned short)va_arg(args, unsigned int) :
-                (flag & HH_FLAG) ? (unsigned char)va_arg(args, unsigned int) :
-                (flag & L_FLAG) ? va_arg(args, unsigned long) :
-                (flag & LL_FLAG) ? va_arg(args, unsigned long long) :
-                (flag & INTMAX_T) ? va_arg(args, uintmax_t) :
-                (flag & SIZE_T) ? va_arg(args, size_t) :
-                va_arg(args, unsigned int);
-                
-                count += ft_unsigned(nb, *format, width, flag);
-            }
-            else if (*format == 'o' || *format == 'O')
-            {
-                if (*format == 'O')
-					flag |= L_FLAG;
-                nb = (flag & H_FLAG) ? (unsigned short)va_arg(args, unsigned int) : \
-					 (flag & HH_FLAG) ? (unsigned char)va_arg(args, unsigned int) : \
-					 (flag & L_FLAG) ? va_arg(args, unsigned long) : \
-					 (flag & LL_FLAG) ? va_arg(args, unsigned long long) : \
-					 (flag & INTMAX_T) ? va_arg(args, uintmax_t) : \
-					 (flag & SIZE_T) ? va_arg(args, size_t) : \
-					 va_arg(args, unsigned int);
-                
-                count += ft_unsigned(nb, *format, width, flag);
-            }
-            else if (*format == 'x' || *format == 'X')
-            {
-                nb = (flag & H_FLAG) ? (unsigned short)va_arg(args, unsigned int) :
-                (flag & HH_FLAG) ? (unsigned char)va_arg(args, unsigned int) :
-                (flag & L_FLAG) ? va_arg(args, unsigned long) :
-                (flag & LL_FLAG) ? va_arg(args, unsigned long long) :
-                (flag & INTMAX_T) ? va_arg(args, uintmax_t) :
-                (flag & SIZE_T) ? va_arg(args, size_t) :
-                va_arg(args, unsigned int);
-                
-                count += ft_unsigned(nb, *format, width, flag);
-            }
-            else if (*format == 'p')
-            {
-            }
+			format += format_goes_up(format, ef_cw_nf, args, width);
+			if (ef_cw_nf[1] == -1)
+				break ;
 		}
 		else
-		{
-			ft_putc(*format);
-			++count;
-		}
-		format++;	
+			ef_cw_nf[1] += ft_putc(*format);
+		format++;
 	}
-	va_end(args);
-	return (count);
+	if (ef_cw_nf[0] & ACTIVE_COLOR)
+		ft_printf(COLOR_RESET);
+	return (ef_cw_nf[1]);
 }
 
-int		ft_printf(const char *format, ...)
+int			ft_printf(const char *format, ...)
 {
-	va_list	listPointer;
+	int		done;
+	va_list	list_pointer;
 
-	va_start(listPointer, format);
-
-	int i = print(format, listPointer);
-	return (i);
+	va_start(list_pointer, format);
+	done = print(format, list_pointer);
+	va_end(list_pointer);
+	return (done);
 }

@@ -6,11 +6,11 @@
 #    By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/02 08:57:51 by dpetrov           #+#    #+#              #
-#    Updated: 2016/12/14 16:42:47 by dpetrov          ###   ########.fr        #
+#    Updated: 2016/12/31 13:00:57 by dpetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= print
+NAME	= libftprintf.a
 
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror
@@ -20,18 +20,20 @@ IN		= -I./includes/
 OBJ_PATH = ./obj/
 SRC_PATH = ./src/
 
-SRCS	= ft_printf.c functions.c convert.c main.c util.c
+SRCS	= ft_printf.c functions.c convert.c util.c print.c color.c float.c \
+		  format_specifiers.c handle_1.c handle_2.c conversion.c
 SRC     = $(addprefix $(SRC_PATH),$(SRCS))
 
 OBJS    = $(SRCS:.c=.o)
 OBJ		= $(addprefix $(OBJ_PATH),$(OBJS))
 
-LFLAGS  = -L./libft -lft
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(INCDIR) -o $(NAME) $(OBJ)
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
 	@echo "\033[32mFT_PRINTF:\t\t:BUILDED\033[0m"
 
 $(OBJ_PATH)%.o : $(SRC_PATH)%.c
