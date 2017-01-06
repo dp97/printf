@@ -5,47 +5,29 @@
 #                                                     +:+ +:+         +:+      #
 #    By: dpetrov <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/12/02 08:57:51 by dpetrov           #+#    #+#              #
-#    Updated: 2016/12/31 13:00:57 by dpetrov          ###   ########.fr        #
+#    Created: 2017/01/06 09:37:16 by dpetrov           #+#    #+#              #
+#    Updated: 2017/01/06 15:44:14 by dpetrov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= libftprintf.a
+NAME	= ft_ls
 
-CC		= gcc
-CFLAGS	= -Wall -Wextra -Werror
+CC		= -gcc -Wall -Wextra -Werror
 
-IN		= -I./includes/
-
-OBJ_PATH = ./obj/
-SRC_PATH = ./src/
-
-SRCS	= ft_printf.c functions.c convert.c util.c print.c color.c float.c \
-		  format_specifiers.c handle_1.c handle_2.c conversion.c
-SRC     = $(addprefix $(SRC_PATH),$(SRCS))
-
-OBJS    = $(SRCS:.c=.o)
-OBJ		= $(addprefix $(OBJ_PATH),$(OBJS))
+SRCS	= main.c list_dir.c inspect_file.c
+SRC_PATH	= srcs/
+SRC		= $(addprefix $(SRC_PATH), $(SRCS))
 
 .PHONY: all clean fclean re
 
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	@ar rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
-	@echo "\033[32mFT_PRINTF:\t\t:BUILDED\033[0m"
-
-$(OBJ_PATH)%.o : $(SRC_PATH)%.c
-	@mkdir -p $(OBJ_PATH)
-	@$(CC) $(CFLAGS) $(IN) -c $< -o $@
+all:
+	@$(CC) -I./includes/ $(SRC) -o $(NAME)
+	@echo "\033[32mFT_LS:\t\t:BUILDED\033[0m"
 
 clean:
-	@rm -rf $(OBJ_PATH)
-	@echo "\033[32mFT_PRINTF:\t\t:CLEANED\033[0m"
 
-fclean: clean
-	@rm -f $(NAME)
-	@echo "\033[32mFT_PRINTF:\t\t:FULL CLEANED\033[0m"
+fclean:
+	@rm -r $(NAME)
+	@echo "\033[32mFT_LS:\t\t:FUlL CLEANED\033[0m"
 
 re: fclean all
